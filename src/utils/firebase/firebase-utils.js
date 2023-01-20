@@ -1,16 +1,18 @@
 //import firebase 
 //initialize app creates an app for you based on some kind of config
 import { initializeApp } from 'firebase/app';
-import { getAuth , 
+import { 
+    getAuth , 
     signInWithRedirect,
     signInWithPopup,
-    GoogleAuthProvider } from 'firebase/auth'
+    GoogleAuthProvider,
+    createUserWithEmailAndPassword,
+} from 'firebase/auth'
 import {
     getFirestore,
     doc, //retrieve documents 
     getDoc, //get document data
     setDoc //set document data 
-
 } from 'firebase/firestore'
 
 // Your web app's Firebase configuration
@@ -35,14 +37,17 @@ const firebaseConfig = {
   });
 
   export const auth = getAuth();
+  //functions calling sign in methods 
   export const signInWithGooglePopup =  () => signInWithPopup(auth, provider)
+  export const signInWithGoogleRedirect = () => signInWithRedirect(auth,provider)
 
   export const db = getFirestore(); //this points out to our database 
 
   //userAuth is what we get from google
-  export const createUserDocumentFromAuth = async ( userAuth ) =>{
+  export const createUserDocumentFromAuth = async ( userAuth , additionalInformation ={}) =>{
     //check if existing document reference exists 
     //doc takes 3 arguments, the database , collection, identifier(tells what it is)
+    if(!userAuth) return;
     const userDocRef = doc(db, 'users', userAuth.uid )
     console.log(userDocRef)
 
@@ -66,7 +71,8 @@ const firebaseConfig = {
             await setDoc(userDocRef, {
                 displayName,
                 email,
-                createdAt
+                createdAt,
+                ...additionalInformation,
             });
         }catch (error) {
             console.log('error creating the user' , error.message)
@@ -76,4 +82,9 @@ const firebaseConfig = {
     //if user data exists
     return userDocRef;
 
+  }
+
+  export const createAuthUserWithEmailAndPassword = async (email,password) => {
+    if (!email || !password ) return;
+    return await createUserWithEmailAndPassword(auth,email,password);
   }
