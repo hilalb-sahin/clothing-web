@@ -8,6 +8,8 @@ import {
     GoogleAuthProvider,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged, //returns us a listener, we need helper func to use
 } from 'firebase/auth'
 import {
     getFirestore,
@@ -15,6 +17,7 @@ import {
     getDoc, //get document data
     setDoc //set document data 
 } from 'firebase/firestore'
+
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -93,5 +96,11 @@ const firebaseConfig = {
     if (!email || !password ) return;
     return await signInWithEmailAndPassword(auth,email,password);
   }
-  
-   
+  //takes auth singleton and signs it out. 
+  //auth keeps track what user is signed in.
+  export const signOutUser = async() => {
+    await signOut(auth);
+  }
+
+  export const onAuthStateChangedListener = (callback) => 
+  onAuthStateChanged(auth, callback);

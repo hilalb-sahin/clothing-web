@@ -9,6 +9,7 @@ import FormInput from "../form-input/form-input.component";
 import './sign-in-form.styles.scss';
 import Button from "../button/button.component";
 
+
 //set default values
 const defaultFormFields = {
     email : '',
@@ -17,25 +18,27 @@ const defaultFormFields = {
 const SignInForm = () => {
     const [formFields, setFormFields ]= useState(defaultFormFields);
     const { email , password } = formFields;
-
     const resetFormFields = () => {
         setFormFields(defaultFormFields);
     }
     
     //user doc Ref creates the user document in firebase
     const signInWithGoogle = async () => {
-        const {user} = await signInWithGooglePopup();
-         await createUserDocumentFromAuth(user);
+         await signInWithGooglePopup();
     }
 
+    
     const handleSubmit = async (event) => {
         event.preventDefault();
         
         try{
-            const response = await signInAuthUserWithEmailAndPassword(email,password);
-            console.log(response);
+            const { user } = await signInAuthUserWithEmailAndPassword(
+                email,
+                password
+            );
             resetFormFields();
-        }catch(error) {
+
+        } catch(error) {
             if(error.code === "auth/user-not-found"){
                 alert("User not found")
             }
@@ -51,6 +54,7 @@ const SignInForm = () => {
         setFormFields({...formFields, [name]: value})
     }
 
+
     return (
     <div className="sign-up-container">
         <h2>Already have an account?</h2>
@@ -61,12 +65,10 @@ const SignInForm = () => {
             <FormInput  label = "Password" type= "password" required name="password" value={password} onChange={handleChange}/> 
             <div className="buttons-container">
                 <Button type="submit">Sign in</ Button>
-                <Button  type = 'button' buttonType='google' onClick = {signInWithGoogle}>Google sign in </Button>
+                <Button  type = 'button'  buttonType='google' onClick = {signInWithGoogle}>Google sign in </Button>
 
             </div>
-
         </form>
-
     </div>
     )
 }
