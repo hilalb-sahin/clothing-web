@@ -5,10 +5,7 @@ import PRODUCTS from '../shop-data.json';
 //you need both context and provider
 export const ProductContext = createContext({
         products: [],
-
-
     });
-
 
     //provider returns context
 export const ProductProvider = ( {children} )=> {
