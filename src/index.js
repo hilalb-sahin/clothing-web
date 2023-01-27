@@ -14,7 +14,7 @@ import './index.scss';
 
 ReactDOM.render(
   <React.StrictMode>  
-    <BrowserRouter> 
+    <BrowserRouter basename={process.env.PUBLIC_URL}> 
       <UserProvider> 
           <ProductProvider>
             <CartProvider>
